@@ -17,12 +17,22 @@ public enum Constraint {
     case right      (_ : CGFloat = 0)
     case centerX
     case centerY
+    case width      (multiplier: CGFloat = 1.0)
+    case height     (multiplier: CGFloat = 1.0)
 }
 
 public extension Constraint {
     static var fill:     [Constraint] { [.top(), .bottom(), .left(), .right()] }
     static var fillSafe: [Constraint] { [.topSafe(), .bottomSafe(), .left(), .right()] }
     static var center:   [Constraint] { [.centerX, .centerY] }
+}
+
+public extension UIView {
+    func addSubview(_ child: UIView, constraints: [Constraint]) {
+        addSubview(child)
+        child.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate(constraints.map { $0.map(child, self) })
+    }
 }
 
 public extension Constraint {
@@ -59,14 +69,14 @@ public extension Constraint {
         case .centerY:
             return child.centerYAnchor.constraint(
                 equalTo: parent.centerYAnchor)
+            
+        case .width(let multiplier):
+            return child.widthAnchor.constraint(
+                equalTo: parent.widthAnchor, multiplier: multiplier)
+            
+        case .height(let multiplier):
+            return child.heightAnchor.constraint(
+                equalTo: parent.heightAnchor, multiplier: multiplier)
         }
-    }
-}
-
-public extension UIView {
-    func addSubview(_ child: UIView, constraints: [Constraint]) {
-        addSubview(child)
-        child.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate(constraints.map { $0.map(child, self) })
     }
 }
