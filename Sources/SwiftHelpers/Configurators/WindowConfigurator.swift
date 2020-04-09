@@ -9,7 +9,7 @@
 import UIKit
 
 public struct WindowConfigurator {
-    private(set) var window: UIWindow
+    public private(set) var window: UIWindow
         
     public init(coordinator: Coordinator) {
         window = UIWindow()
